@@ -83,3 +83,21 @@ The previous implementation should be registered in `META-INF/services/org.testc
 Usually, containers are started sequentially when more than one container is used.
 Using `Startables.deepStart(container1, container2, ...).join()` will start all containers in parallel. 
 This can be advantageous to reduce the impact of the container startup overhead.
+
+## Containerized Docker Compose
+
+If you are using `ComposeContainer` (for `compose`, v2) or `DockerComposeContainer`
+(`docker-compose`, v1), then you may be running the `compose` plugin/program
+inside a docker container itself.
+This works by running the `compose` commands inside a container,
+to communicate with a docker engine running somewhere else.
+
+If you need to access files on your local filesystem,
+such as with a `compose` file with a build context instead of an image,
+then you may find that it is beneficial to opt out of the default
+Testcontainers behavior of copying files to containers, and use a fs mount:
+
+```properties
+compose.container.fs.mode=bind
+#compose.container.fs.mode=copy
+```

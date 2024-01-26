@@ -11,6 +11,7 @@ import org.testcontainers.utility.AuditLogger;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 import org.testcontainers.utility.PathUtils;
+import org.testcontainers.utility.TestcontainersConfiguration;
 
 import java.io.File;
 import java.util.List;
@@ -43,7 +44,10 @@ class ContainerisedDockerCompose extends GenericContainer<ContainerisedDockerCom
         final String composeFileEnvVariableValue = Joiner.on(UNIX_PATH_SEPARATOR).join(absoluteDockerComposeFiles); // we always need the UNIX path separator
         logger().debug("Set env COMPOSE_FILE={}", composeFileEnvVariableValue);
         addEnv(ENV_COMPOSE_FILE, composeFileEnvVariableValue);
-        withCopyFileToContainer(MountableFile.forHostPath(pwd), containerPwd);
+        if (TestcontainersConfiguration.getInstance().isComposeFsModeMount())
+            addFileSystemBind(pwd, containerPwd, BindMode.READ_WRITE);
+        else
+            withCopyFileToContainer(MountableFile.forHostPath(pwd), containerPwd);
 
         // Ensure that compose can access docker. Since the container is assumed to be running on the same machine
         //  as the docker daemon, just mapping the docker control socket is OK.

@@ -23,6 +23,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
@@ -219,6 +220,10 @@ public class TestcontainersConfiguration {
 
     public Integer getClientPingTimeout() {
         return Integer.parseInt(getEnvVarOrProperty("client.ping.timeout", "10"));
+    }
+
+    public boolean isComposeFsModeMount() {
+        return "mount".equalsIgnoreCase(getEnvVarOrProperty("compose.container.fs.mode", "copy"));
     }
 
     @Nullable
