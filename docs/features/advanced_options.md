@@ -98,6 +98,6 @@ then you may find that it is beneficial to opt out of the default
 Testcontainers behavior of copying files to containers, and use a fs mount:
 
 ```properties
-compose.container.fs.mode=bind
+compose.container.fs.mode=mount
 #compose.container.fs.mode=copy
 ```
